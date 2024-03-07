@@ -168,4 +168,8 @@ contract PermissionedGenericHandler is IHandler {
 
         _tokenContractAddressToTokenProperties[contractAddress].isWhitelisted = true;
     }
+
+    function nativeDeposit(bytes32 resourceID, address depositor, bytes calldata data, address controller) external  returns(bytes memory){
+        //not implemented
+    }
 }

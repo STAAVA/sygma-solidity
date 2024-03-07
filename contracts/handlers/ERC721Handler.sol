@@ -142,4 +142,8 @@ contract ERC721Handler is IHandler, ERCHandlerHelpers, ERC721Safe {
     function setResource(bytes32 resourceID, address contractAddress, bytes calldata args) external onlyBridge {
         _setResource(resourceID, contractAddress);
     }
+    
+    function nativeDeposit(bytes32 resourceID, address depositor, bytes calldata data, address controller) external  returns(bytes memory){
+        //not implemented
+    }
 }

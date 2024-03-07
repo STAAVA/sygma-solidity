@@ -124,4 +124,8 @@ contract ERC20Handler is IHandler, ERCHandlerHelpers, ERC20Safe {
             _setDecimals(contractAddress, externalTokenDecimals);
         }
     }
+
+    function nativeDeposit(bytes32 resourceID, address depositor, bytes calldata data, address controller) external  returns(bytes memory){
+        //not implemented
+    }
 }

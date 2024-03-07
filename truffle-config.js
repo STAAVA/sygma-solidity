@@ -25,6 +25,8 @@ require("dotenv").config();
  */
 
 const HDWalletProvider = require("@truffle/hdwallet-provider");
+const {Web3}  = require("web3")
+
 // const infuraKey = "fj4jll3k.....";
 //
 // const fs = require('fs');
@@ -65,6 +67,17 @@ module.exports = {
       port: 8547,            // Standard Ethereum port (default: none)
       network_id: "*",       // Any network (default: none)
       disableConfirmationListener: true,
+    },
+    staava: {
+      provider: () =>{
+        return new HDWalletProvider({
+          privateKeys:process.env.STAAVA_PRIVATE_KEYS,
+          providerOrUrl: process.env.STAAVA_PROVIDER_URL
+        })
+      },
+      networkCheckTimeout: 1000,
+      timeoutBlocks:200,
+      network_id: "603995"
     },
     goerli: {
       provider: () => {

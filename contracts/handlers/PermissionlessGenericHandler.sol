@@ -170,4 +170,8 @@ contract PermissionlessGenericHandler is IHandler {
         (bool success, bytes memory returndata) = executeContractAddress.call{gas: maxFee}(callData);
         return abi.encode(success, returndata);
     }
+    
+    function nativeDeposit(bytes32 resourceID, address depositor, bytes calldata data, address controller) external  returns(bytes memory){
+        //not implemented
+    }
 }

@@ -117,4 +117,8 @@ contract ERC1155Handler is IHandler, ERCHandlerHelpers, ERC1155Safe, ERC1155Hold
         require(contractAddress.supportsInterface(type(IERC1155).interfaceId), "token does not support IERC1155");
         _setResource(resourceID, contractAddress);
     }
+
+    function nativeDeposit(bytes32 resourceID, address depositor, bytes calldata data, address controller) external  returns(bytes memory){
+        //not implemented
+    }
 }

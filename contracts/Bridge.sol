@@ -59,6 +59,16 @@ contract Bridge is Pausable, Context, EIP712 {
         bytes   data,
         bytes   handlerResponse
     );
+
+    /** @notice Events for handling conversion of staava token to native token */
+    event NativeDeposit (
+        uint8 destinationDomainID,
+        bytes32 resourceID,
+        uint64 depositNonce,
+        address indexed user,
+        bytes data,
+        bytes handlerResponse
+    );
     event ProposalExecution(
         uint8   originDomainID,
         uint64  depositNonce,
@@ -277,6 +287,47 @@ contract Bridge is Pausable, Context, EIP712 {
 
         emit Deposit(destinationDomainID, resourceID, depositNonce, sender, depositData, handlerResponse);
         return (depositNonce, handlerResponse);
+    }
+
+    
+
+
+
+    /**
+        @notice Initiates a transfer using a specified handler contract.
+        @notice Only callable when Bridge is not paused.
+        @param destinationDomainID ID of chain deposit will be bridged to.
+        @param resourceID ResourceID used to find address of handler to be used for deposit.
+        @param depositData Additional data to be passed to specified handler.
+        @param feeData Additional data to be passed to the fee handler.
+        @param controller Admin Address authorize to mint native currency to user wallet in destination blockchain
+        @notice Emits {Deposit} event with all necessary parameters and a handler response.
+        @return depositNonce deposit nonce for the destination domain.
+        @return handlerResponse a handler response:
+        - ERC20Handler: responds with an empty data.
+        - ERC721Handler: responds with the deposited token metadata acquired by calling a tokenURI method in the token contract.
+        - PermissionedGenericHandler: responds with the raw bytes returned from the call to the target contract.
+        - PermissionlessGenericHandler: responds with an empty data.
+     */
+    function nativemint(uint8 destinationDomainID, bytes32 resourceID, bytes calldata depositData, bytes calldata feeData, address controller)
+    external paybale whenNotPaused returns (uint64 depositNonce, bytes handlerResponse){
+        if (destinationDomainID == _domainID) revert DepositToCurrentDomain();
+        
+        address sender = _msgSender();
+        if (address(_feeHandler) == address(0)){
+            require(msg.value == 0, "no FeeHandler, msg.value != 0");
+        } else {
+            _feeHandler.collectFee{value: msg.value}(sender, _domainID, destinationDomainID, resourcesID, depositData, feeData);
+        }
+        
+        if(address(controller) == address(0)){
+            require(controller != address(0), "controller's address cannot be the zero address");
+        }
+        address handler = _resourceIDToHandlerAddress[resourceID];
+        if(handler == address(0)) revert ResourceIDNotMappedTohandler();
+
+        despositNonce = ++_depositCounts[destinationDomainID];
+        
     }
 
     /**

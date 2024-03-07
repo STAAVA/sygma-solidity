@@ -15,6 +15,17 @@ interface IHandler {
      */
     function deposit(bytes32 resourceID, address depositor, bytes calldata data) external returns (bytes memory);
 
+    
+ /**
+        @notice It is intended that deposit are made using the Bridge contract.
+        @param resourceID ResourceID used to find address of handler to be used for deposit.
+        @param depositor Address of account making the deposit in the Bridge contract.
+        @param data Consists of additional data needed for a specific deposit.
+        @param controller Admin Address authorize to mint native currency to user wallet in destination blockchain
+     */
+    function nativeDeposit(bytes32 resourceID, address depositor, bytes calldata data, address controller) external returns (bytes memory);
+
+
     /**
         @notice It is intended that proposals are executed by the Bridge contract.
         @param resourceID ResourceID to be used when making deposits.
